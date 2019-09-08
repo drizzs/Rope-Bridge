@@ -1,6 +1,6 @@
-package com.mrtrollnugnug.ropebridge.network;
+package com.bridgebuildersanonymous.ropebridge.network;
 
-import com.mrtrollnugnug.ropebridge.handler.LadderBuildingHandler;
+import com.bridgebuildersanonymous.ropebridge.handler.LadderBuildingHandler;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;

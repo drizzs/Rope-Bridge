@@ -1,6 +1,4 @@
-package com.mrtrollnugnug.ropebridge.block;
-
-import com.mrtrollnugnug.ropebridge.block.RopeLadder.EnumType;
+package com.bridgebuildersanonymous.ropebridge.block;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,22 +9,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TileEntityRopeLadder extends TileEntity {
-    private EnumType type;
+    private RopeLadder.EnumType type;
     private static final String typeKey = "type";
     
-    public TileEntityRopeLadder(EnumType type) {
+    public TileEntityRopeLadder(RopeLadder.EnumType type) {
         setType(type);
     }
 
     public TileEntityRopeLadder() {
-        this(EnumType.OAK);
+        this(RopeLadder.EnumType.OAK);
     }
 
-    public EnumType getType() {
+    public RopeLadder.EnumType getType() {
         return type;
     }
 
-    public void setType(EnumType type) {
+    public void setType(RopeLadder.EnumType type) {
         this.type = type;
     }
 
@@ -48,7 +46,7 @@ public class TileEntityRopeLadder extends TileEntity {
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         if (compound.hasKey(typeKey)) {
-            setType(EnumType.fromMeta(compound.getInteger(typeKey)));
+            setType(RopeLadder.EnumType.fromMeta(compound.getInteger(typeKey)));
         }
     }
 

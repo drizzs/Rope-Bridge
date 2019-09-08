@@ -1,6 +1,6 @@
-package com.mrtrollnugnug.ropebridge.common;
+package com.bridgebuildersanonymous.ropebridge.common;
 
-import com.mrtrollnugnug.ropebridge.handler.ContentHandler;
+import com.bridgebuildersanonymous.ropebridge.handler.ContentHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;

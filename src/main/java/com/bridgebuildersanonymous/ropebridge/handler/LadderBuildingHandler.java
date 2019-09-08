@@ -1,13 +1,13 @@
-package com.mrtrollnugnug.ropebridge.handler;
+package com.bridgebuildersanonymous.ropebridge.handler;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.mrtrollnugnug.ropebridge.block.RopeLadder;
-import com.mrtrollnugnug.ropebridge.block.RopeLadder.EnumType;
-import com.mrtrollnugnug.ropebridge.block.TileEntityRopeLadder;
-import com.mrtrollnugnug.ropebridge.lib.Constants.Messages;
-import com.mrtrollnugnug.ropebridge.lib.ModUtils;
+import com.bridgebuildersanonymous.ropebridge.lib.Constants;
+import com.bridgebuildersanonymous.ropebridge.lib.ModUtils;
+import com.bridgebuildersanonymous.ropebridge.block.RopeLadder;
+import com.bridgebuildersanonymous.ropebridge.block.RopeLadder.EnumType;
+import com.bridgebuildersanonymous.ropebridge.block.TileEntityRopeLadder;
 
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
@@ -26,12 +26,12 @@ public class LadderBuildingHandler {
 			ItemStack builder) {
 
 		if (!hitSide.getAxis().isHorizontal()) {
-			ModUtils.tellPlayer(player, Messages.BAD_SIDE,
-					hitSide == EnumFacing.UP ? I18n.format(Messages.TOP) : I18n.format(Messages.BOTTOM));
+			ModUtils.tellPlayer(player, Constants.Messages.BAD_SIDE,
+					hitSide == EnumFacing.UP ? I18n.format(Constants.Messages.TOP) : I18n.format(Constants.Messages.BOTTOM));
 			return;
 		}
 		if (!world.isSideSolid(start.offset(hitSide.getOpposite()), hitSide)) {
-			ModUtils.tellPlayer(player, Messages.NOT_SOLID);
+			ModUtils.tellPlayer(player, Constants.Messages.NOT_SOLID);
 			return;
 		}
 
@@ -44,7 +44,7 @@ public class LadderBuildingHandler {
 			state = world.getBlockState(lower);
 		}
 		if (count <= 0) {
-			ModUtils.tellPlayer(player, Messages.OBSTRUCTED);
+			ModUtils.tellPlayer(player, Constants.Messages.OBSTRUCTED);
 			return;
 		}
 
@@ -55,7 +55,7 @@ public class LadderBuildingHandler {
 
 		if (!player.capabilities.isCreativeMode) {
 			if (type == null || !hasMaterials(player, woodNeeded, ropeNeeded, woodType)) {
-				ModUtils.tellPlayer(player, Messages.UNDERFUNDED_LADDER, woodNeeded, ropeNeeded);
+				ModUtils.tellPlayer(player, Constants.Messages.UNDERFUNDED_LADDER, woodNeeded, ropeNeeded);
 				return;
 			}
 		}

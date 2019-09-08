@@ -1,4 +1,4 @@
-package com.mrtrollnugnug.ropebridge.item;
+package com.bridgebuildersanonymous.ropebridge.item;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,12 +6,12 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.mrtrollnugnug.ropebridge.RopeBridge;
-import com.mrtrollnugnug.ropebridge.block.BridgeSlab;
-import com.mrtrollnugnug.ropebridge.handler.ContentHandler;
-import com.mrtrollnugnug.ropebridge.lib.Constants.Messages;
-import com.mrtrollnugnug.ropebridge.lib.ModUtils;
-import com.mrtrollnugnug.ropebridge.network.BridgeMessage;
+import com.bridgebuildersanonymous.ropebridge.lib.Constants;
+import com.bridgebuildersanonymous.ropebridge.lib.ModUtils;
+import com.bridgebuildersanonymous.ropebridge.RopeBridge;
+import com.bridgebuildersanonymous.ropebridge.block.BridgeSlab;
+import com.bridgebuildersanonymous.ropebridge.handler.ContentHandler;
+import com.bridgebuildersanonymous.ropebridge.network.BridgeMessage;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -81,7 +81,7 @@ public class ItemBridgeBuilder extends ItemBuilder {
             final EntityPlayer player = (EntityPlayer) entityLiving;
             if (this.getMaxItemUseDuration(stack) - timeLeft > 10) {
                 if (!player.onGround) {
-                    ModUtils.tellPlayer(player, Messages.NOT_ON_GROUND);
+                    ModUtils.tellPlayer(player, Constants.Messages.NOT_ON_GROUND);
                 } else {
                     final RayTraceResult hit = trace(player);
                     if (hit.typeOfHit == Type.BLOCK) {
@@ -99,7 +99,7 @@ public class ItemBridgeBuilder extends ItemBuilder {
         final IBlockState state = player.world.getBlockState(pos);
         final Block block = state.getBlock();
         if (!player.world.isRemote && player.isSneaking() && isBridgeBlock(player.world.getBlockState(pos).getBlock())) {
-            ModUtils.tellPlayer(RopeBridge.getProxy().getPlayer(), Messages.WARNING_BREAKING);
+            ModUtils.tellPlayer(RopeBridge.getProxy().getPlayer(), Constants.Messages.WARNING_BREAKING);
             breakBridge(player, player.world, pos, block.getMetaFromState(state));
         }
         return false;

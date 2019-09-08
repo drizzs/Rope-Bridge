@@ -1,9 +1,9 @@
-package com.mrtrollnugnug.ropebridge.lib;
+package com.bridgebuildersanonymous.ropebridge.lib;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mrtrollnugnug.ropebridge.handler.ContentHandler;
+import com.bridgebuildersanonymous.ropebridge.handler.ContentHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

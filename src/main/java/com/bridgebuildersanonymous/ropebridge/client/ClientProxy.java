@@ -1,7 +1,7 @@
-package com.mrtrollnugnug.ropebridge.client;
+package com.bridgebuildersanonymous.ropebridge.client;
 
-import com.mrtrollnugnug.ropebridge.common.CommonProxy;
-import com.mrtrollnugnug.ropebridge.handler.ContentHandler;
+import com.bridgebuildersanonymous.ropebridge.common.CommonProxy;
+import com.bridgebuildersanonymous.ropebridge.handler.ContentHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

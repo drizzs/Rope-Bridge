@@ -1,10 +1,10 @@
-package com.mrtrollnugnug.ropebridge.block;
+package com.bridgebuildersanonymous.ropebridge.block;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.mrtrollnugnug.ropebridge.handler.ConfigurationHandler;
+import com.bridgebuildersanonymous.ropebridge.handler.ConfigurationHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

@@ -1,11 +1,11 @@
-package com.mrtrollnugnug.ropebridge.handler;
+package com.bridgebuildersanonymous.ropebridge.handler;
 
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.mrtrollnugnug.ropebridge.lib.Constants.Messages;
-import com.mrtrollnugnug.ropebridge.lib.ModUtils;
+import com.bridgebuildersanonymous.ropebridge.lib.Constants;
+import com.bridgebuildersanonymous.ropebridge.lib.ModUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +45,7 @@ public class BridgeBuildingHandler {
             z2 = pos2.getX();
         }
         if (Math.abs(z2 - z1) > 3) {
-            ModUtils.tellPlayer(player, Messages.NOT_CARDINAL);
+            ModUtils.tellPlayer(player, Constants.Messages.NOT_CARDINAL);
             return;
         }
         double m;
@@ -55,7 +55,7 @@ public class BridgeBuildingHandler {
 
         m = (double) (y2 - y1) / (double) (x2 - x1);
         if (!ConfigurationHandler.isIgnoreSlopeWarnings() && Math.abs(m) > 0.2) {
-            ModUtils.tellPlayer(player, Messages.SLOPE_GREAT);
+            ModUtils.tellPlayer(player, Constants.Messages.SLOPE_GREAT);
             return;
         }
         b = y1 - m * x1;
@@ -98,7 +98,7 @@ public class BridgeBuildingHandler {
             }
             buildBridge(player.world, bridge, type);
         } else {
-            ModUtils.tellPlayer(player, Messages.OBSTRUCTED);
+            ModUtils.tellPlayer(player, Constants.Messages.OBSTRUCTED);
             return;
         }
     }
@@ -132,7 +132,7 @@ public class BridgeBuildingHandler {
         if (slabsHad >= slabsNeeded && stringHad >= stringNeeded) {
             return true;
         } else {
-            ModUtils.tellPlayer(player, Messages.UNDERFUNDED_BRIDGE, slabsNeeded, stringNeeded);
+            ModUtils.tellPlayer(player, Constants.Messages.UNDERFUNDED_BRIDGE, slabsNeeded, stringNeeded);
             return false;
         }
     }

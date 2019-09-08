@@ -1,7 +1,7 @@
-package com.mrtrollnugnug.ropebridge.item;
+package com.bridgebuildersanonymous.ropebridge.item;
 
-import com.mrtrollnugnug.ropebridge.RopeBridge;
-import com.mrtrollnugnug.ropebridge.network.LadderMessage;
+import com.bridgebuildersanonymous.ropebridge.RopeBridge;
+import com.bridgebuildersanonymous.ropebridge.network.LadderMessage;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

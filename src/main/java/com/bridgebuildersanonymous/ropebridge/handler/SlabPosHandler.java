@@ -1,4 +1,4 @@
-package com.mrtrollnugnug.ropebridge.handler;
+package com.bridgebuildersanonymous.ropebridge.handler;
 
 import net.minecraft.util.math.BlockPos;
 

@@ -1,6 +1,6 @@
-package com.mrtrollnugnug.ropebridge.block;
+package com.bridgebuildersanonymous.ropebridge.block;
 
-import com.mrtrollnugnug.ropebridge.handler.ContentHandler;
+import com.bridgebuildersanonymous.ropebridge.handler.ContentHandler;
 
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.ITileEntityProvider;

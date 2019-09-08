@@ -1,8 +1,8 @@
-package com.mrtrollnugnug.ropebridge.item;
+package com.bridgebuildersanonymous.ropebridge.item;
 
 import java.math.BigDecimal;
 
-import com.mrtrollnugnug.ropebridge.handler.ConfigurationHandler;
+import com.bridgebuildersanonymous.ropebridge.handler.ConfigurationHandler;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

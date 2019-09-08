@@ -1,4 +1,4 @@
-package com.mrtrollnugnug.ropebridge.lib;
+package com.bridgebuildersanonymous.ropebridge.lib;
 
 import java.util.Random;
 

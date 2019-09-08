@@ -1,10 +1,10 @@
-package com.mrtrollnugnug.ropebridge;
+package com.bridgebuildersanonymous.ropebridge;
 
-import com.mrtrollnugnug.ropebridge.common.CommonProxy;
-import com.mrtrollnugnug.ropebridge.handler.ConfigurationHandler;
-import com.mrtrollnugnug.ropebridge.lib.Constants;
-import com.mrtrollnugnug.ropebridge.network.BridgeMessage;
-import com.mrtrollnugnug.ropebridge.network.LadderMessage;
+import com.bridgebuildersanonymous.ropebridge.lib.Constants;
+import com.bridgebuildersanonymous.ropebridge.common.CommonProxy;
+import com.bridgebuildersanonymous.ropebridge.handler.ConfigurationHandler;
+import com.bridgebuildersanonymous.ropebridge.network.BridgeMessage;
+import com.bridgebuildersanonymous.ropebridge.network.LadderMessage;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;

@@ -1,10 +1,9 @@
-package com.bridgebuildersanonymous.ropebridge.lib;
+package com.bridgebuildersanonymous.ropebridge.util.lib;
 
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.tags.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +35,7 @@ public final class ModLib {
     public static Block blockRopeLadder;
 
     // Items
+    public static Item bridgeicon;
     public static Item itemBridgeBuilder, itemLadderBuilder;
     public static Item itemRope, itemBridgeHook, itemBarrel, itemHandle, itemLadderHook;
 

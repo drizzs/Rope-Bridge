@@ -1,9 +1,8 @@
-package com.bridgebuildersanonymous.ropebridge.builders;
+package com.bridgebuildersanonymous.ropebridge.util.handler.builders;
 
 import java.util.*;
 
 import com.bridgebuildersanonymous.ropebridge.util.handler.ConfigHandler;
-import com.bridgebuildersanonymous.ropebridge.util.handler.IMaterials;
 import com.bridgebuildersanonymous.ropebridge.util.handler.SlabPosHandler;
 import com.bridgebuildersanonymous.ropebridge.util.lib.ModLib;
 import com.bridgebuildersanonymous.ropebridge.util.ModUtils;
@@ -16,14 +15,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BridgeBuildingHandler implements IMaterials {
+public class BridgeBuildingHandler {
 
-    public List<BlockState> slabsfrominv;
+    public static List<BlockState> slabsfrominv;
 
-    public void newBridge(PlayerEntity player, ItemStack stack, int inputType, BlockPos pos1, BlockPos pos2) {
+    public static void newBridge(PlayerEntity player, ItemStack stack, int inputType, BlockPos pos1, BlockPos pos2) {
         final LinkedList<SlabPosHandler> bridge = new LinkedList<>();
         boolean allClear = true;
         int x1;
@@ -97,8 +97,9 @@ public class BridgeBuildingHandler implements IMaterials {
         if (allClear) {
             final int type = inputType == -1 ? getWoodType(player) : inputType;
             if (inputType == -1 && !player.isCreative()) {
+                Hand hand = player.getActiveHand();
                 takeMaterials(player, distInt - 1);
-                stack.damageItem(ConfigHandler.COMMON.bridgeDamage.get(), stack, stack);
+                stack.damageItem(ConfigHandler.COMMON.bridgeDamage.get(), player, (p) -> { p.sendBreakAnimation(hand);} );
             }
             buildBridge(player.world, bridge, type);
         } else {
@@ -141,7 +142,8 @@ public class BridgeBuildingHandler implements IMaterials {
         }
     }
 
-    private void takeMaterials(PlayerEntity player, int dist) {
+    private static void takeMaterials(PlayerEntity player, int dist) {
+        BridgeBuildingHandler handler = null;
         boolean noCost = ConfigHandler.COMMON.slabsPerBlock.get() == 0 && ConfigHandler.COMMON.stringPerBlock.get() == 0;
         if (player.isCreative() || noCost) {
             return;
@@ -163,16 +165,15 @@ public class BridgeBuildingHandler implements IMaterials {
                 }
             } else if (item.isIn(ItemTags.SLABS)) {
                 if (stack.getCount() > slabsNeeded) {
-                    this.slabsfrominv = new ArrayList<>(slabsNeeded);
-                    for (int n = 0; n < slabsNeeded; n++) {
-                        slabsfrominv.add(item.getBlock().getDefaultState());
-                    }
+                    setSlabsfrominv(stringNeeded, item.getBlock().getDefaultState());
                     stack.shrink(stringNeeded);
                     slabsNeeded = 0;
                 }
             }
         }
     }
+
+
 
     private static boolean addSlab(World world, LinkedList<SlabPosHandler> list, int x, int y, int z, int level, boolean rotate) {
         boolean isClear;
@@ -209,15 +210,12 @@ public class BridgeBuildingHandler implements IMaterials {
     }
 
 
-	private void buildBridge(final World world, final LinkedList<SlabPosHandler> bridge, final int type) {
-
+	private static void buildBridge(final World world, final LinkedList<SlabPosHandler> bridge, final int type) {
         SlabPosHandler slab;
         if (!bridge.isEmpty()) {
             slab = bridge.pop();
-            Block block;
 
-
-            world.setBlockState(slab.getBlockPos(), getSlabsfrominv(), 3);
+            world.setBlockState(slab.getBlockPos(), getSlabs(), 3);
             spawnSmoke(world, new BlockPos(slab.getBlockPos().getX(), slab.getBlockPos().getY(), slab.getBlockPos().getZ()), 1);
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -240,8 +238,16 @@ public class BridgeBuildingHandler implements IMaterials {
         return 0;
     }
 
-    @Override
-    public List<BlockState> getSlabsfrominv() {
-        return this.slabsfrominv;
+
+    public static void setSlabsfrominv(int i, BlockState state) {
+        slabsfrominv = new ArrayList<>(i);
+        for (int n = 0; n < i; n++) {
+            slabsfrominv.add(state);
+        }
     }
+
+    public static BlockState getSlabs(){
+        return slabsfrominv.get(0);
+    }
+
 }

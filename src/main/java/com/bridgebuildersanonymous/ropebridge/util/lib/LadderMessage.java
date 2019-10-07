@@ -1,14 +1,11 @@
-package com.bridgebuildersanonymous.ropebridge.old.network;
-
-import com.bridgebuildersanonymous.ropebridge.old.handler.BridgeBuildingHandler;
-import com.bridgebuildersanonymous.ropebridge.old.handler.LadderBuildingHandler;
+package com.bridgebuildersanonymous.ropebridge.util.lib;
 
 
-import com.bridgebuildersanonymous.ropebridge.util.lib.BridgeMessage;
-import com.sun.java.util.jar.pack.ConstantPool;
+import com.bridgebuildersanonymous.ropebridge.util.handler.LadderBuildingHandler;
+
+
+
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
@@ -18,7 +15,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 import java.util.function.Supplier;
 
@@ -41,11 +37,11 @@ public class LadderMessage {
         this.failed = failed;
     }
 
-    public LadderMessage read(ByteBuf buf) {
+    public static LadderMessage read(ByteBuf buf) {
         try {
-            this.from = BlockPos.fromLong(buf.readLong());
-            this.side = Direction.byIndex(buf.readByte());
-            return new LadderMessage(new BlockPos(from), new Direction(side));
+            BlockPos from = BlockPos.fromLong(buf.readLong());
+            Direction side = Direction.byIndex(buf.readByte());
+            return new LadderMessage(from, side);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             return new LadderMessage(false);

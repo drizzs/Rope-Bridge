@@ -1,11 +1,10 @@
-package com.bridgebuildersanonymous.ropebridge.old.network;
+package com.bridgebuildersanonymous.ropebridge.util.lib;
 
-import com.bridgebuildersanonymous.ropebridge.old.handler.BridgeBuildingHandler;
+import com.bridgebuildersanonymous.ropebridge.util.handler.builders.BridgeBuildingHandler;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,11 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import javax.xml.ws.handler.MessageContext;
-
 import java.util.function.Supplier;
-
-import static com.bridgebuildersanonymous.ropebridge.RopeBridge.MOD_ID;
 
 public class BridgeMessage {
 
@@ -39,7 +34,7 @@ public class BridgeMessage {
         try {
             BlockPos from = BlockPos.fromLong(buf.readLong());
             BlockPos to = BlockPos.fromLong(buf.readLong());
-            return new BridgeMessage(new BlockPos(to), new BlockPos(from));
+            return new BridgeMessage(to, from);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             return new BridgeMessage(false);

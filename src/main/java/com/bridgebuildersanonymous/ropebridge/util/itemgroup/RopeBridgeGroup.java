@@ -1,12 +1,12 @@
-package com.bridgebuildersanonymous.ropebridge.util;
+package com.bridgebuildersanonymous.ropebridge.util.itemgroup;
 
-import com.bridgebuildersanonymous.ropebridge.old.handler.ContentHandler;
 import com.bridgebuildersanonymous.ropebridge.util.lib.ModLib;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
 public class RopeBridgeGroup extends ItemGroup {
-    public static final RopeBridgeGroup instance = new RopeBridgeGroup(ItemGroup.GROUPS.length, "occult");
+
+    public static final RopeBridgeGroup instance = new RopeBridgeGroup(ItemGroup.GROUPS.length, "ropebridge");
 
     private RopeBridgeGroup(int index, String label)
     {

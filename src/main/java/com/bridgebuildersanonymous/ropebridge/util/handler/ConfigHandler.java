@@ -1,50 +1,73 @@
-package com.bridgebuildersanonymous.ropebridge.util.handler
+package com.bridgebuildersanonymous.ropebridge.util.handler;
 
-import net.minecraftforge.common.ForgeConfigSpec
-import org.apache.commons.lang3.tuple.Pair
+import net.minecraftforge.common.ForgeConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
 
-object ConfigHandler {
+public class ConfigHandler {
 
-    val COMMON: CommonConfig
-    val COMMON_SPEC: ForgeConfigSpec
+    public static final CommonConfig COMMON;
+    public static final ForgeConfigSpec COMMON_SPEC;
 
-    init {
-        val specPair = ForgeConfigSpec.Builder().configure<CommonConfig>(Function<Builder, CommonConfig> { CommonConfig(it) })
-        COMMON_SPEC = specPair.right
-        COMMON = specPair.left
+    static {
+        final Pair<CommonConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
+        COMMON_SPEC = specPair.getRight();
+        COMMON = specPair.getLeft();
     }
 
-    class CommonConfig internal constructor(builder: ForgeConfigSpec.Builder) {
-        private val maxBridgeDistance: ForgeConfigSpec.IntValue
-        private val bridgeDroopFactor: ForgeConfigSpec.IntValue? = null
-        private val slabsPerBlock: ForgeConfigSpec.IntValue? = null
-        private val stringPerBlock: ForgeConfigSpec.IntValue? = null
-        private val woodPerBlock: ForgeConfigSpec.IntValue? = null
-        private val ropePerBlock: ForgeConfigSpec.IntValue? = null
-        private val bridgeDamage: ForgeConfigSpec.IntValue? = null
-        private val ladderDamage: ForgeConfigSpec.IntValue? = null
-
-        init {
-            builder.push("BridgeControl")
+    public static class CommonConfig {
+        public final ForgeConfigSpec.IntValue maxBridgeDistance;
+        public final ForgeConfigSpec.IntValue bridgeDroopFactor;
+        public final ForgeConfigSpec.DoubleValue bridgeYOffset;
+        public final ForgeConfigSpec.BooleanValue breakThroughBlocks;
+        public final ForgeConfigSpec.BooleanValue ignoreSlopeWarnings;
+        public final ForgeConfigSpec.IntValue slabsPerBlock;
+        public final ForgeConfigSpec.IntValue stringPerBlock;
+        public final ForgeConfigSpec.IntValue woodPerBlock;
+        public final ForgeConfigSpec.IntValue ropePerBlock;
+        public final ForgeConfigSpec.IntValue bridgeDamage;
+        public final ForgeConfigSpec.IntValue ladderDamage;
+        CommonConfig(ForgeConfigSpec.Builder builder) {
+            builder.push("BridgeControl");
             maxBridgeDistance = builder
-                    .comment("The minimum height to spawn Test Ore at.")
-                    .defineInRange("maxBridgeDistance", 1, 0, 256)
-            maxTestOreSpawnHeight = builder
-                    .comment("The maximum height to spawn Test Ore at.")
-                    .defineInRange("maxTestOreSpawnHeight", 73, 0, 256)
-            chanceToSpawnTestOre = builder
-                    .comment("Controls the chance to spawn Test Ore in world generation.")
-                    .defineInRange("chanceToSpawnTestOre", 20, 1, 100)
-            maxTestOreVeinSize = builder
-                    .comment("The maximum number of ores per vein. Will Spawn half of number indicated. 10 = 5 ore.")
-                    .defineInRange("maxTestOreVeinSize", 10, 1, 100)
-            builder.pop()
-        }
+                    .comment("Max length of bridges made be Grappling Gun.")
+                    .defineInRange("maxBridgeDistance", 400, 1, 1000);
+            bridgeDroopFactor = builder
+                    .comment("Percent of slack the bridge will have, causing it to hang.")
+                    .defineInRange("bridgeDroopFactor", 100, 0, 100);
+            bridgeYOffset = builder
+                    .comment( "Generated bridges will be raised or lowered by this ammount in blocks.\nDefault is just below user's feet.")
+                    .defineInRange("bridgeYOffset", -0.3F, -1.00F, 1.00F);
+            breakThroughBlocks = builder
+                    .comment("If enabled, all blocks that dare stand in a bridge's way will be broken.\nVery useful in creative mode.")
+                    .define("breakThroughBlocks", false);
+            ignoreSlopeWarnings = builder
+                    .comment("Set true to ignore all slope warnings and allow building of very steep bridges.")
+                    .define("ignoreSlopeWarnings", false);
+            builder.pop();
 
-        companion object {
-            private val bridgeYOffset: Float = 0.toFloat()
-            private val breakThroughBlocks: Boolean = false
-            private val ignoreSlopeWarnings: Boolean = false
+            builder.push("MaterialControl");
+            slabsPerBlock = builder
+                    .comment("Slabs consumed for each bridge block built.")
+                    .defineInRange("slabsPerBlock", 1, 0, 10);
+            stringPerBlock = builder
+                    .comment("String consumed for each bridge block built.")
+                    .defineInRange("stringPerBlock", 2, 0, 20);
+            woodPerBlock = builder
+                    .comment("Wood consumed for each ladder block built.")
+                    .defineInRange("woodPerBlock", 1, 1, 10);
+            ropePerBlock = builder
+                    .comment("Rope consumed for each ladder block built.")
+                    .defineInRange("woodPerBlock", 2, 1, 20);
+            builder.pop();
+
+            builder.push("ItemDamage");
+            bridgeDamage = builder
+                    .comment("How much the Ladder Gun is damaged after creating each ladder.")
+                    .defineInRange("bridgeDamage", 1, 0, 64);
+            ladderDamage = builder
+                    .comment("How much the Bridge Gun is damaged after creating each ladder.")
+                    .defineInRange("ladderDamage", 1, 0, 64);
+
         }
     }
 

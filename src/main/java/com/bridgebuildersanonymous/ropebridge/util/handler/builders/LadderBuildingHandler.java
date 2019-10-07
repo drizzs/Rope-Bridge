@@ -1,4 +1,4 @@
-package com.bridgebuildersanonymous.ropebridge.builders;
+package com.bridgebuildersanonymous.ropebridge.util.handler.builders;
 
 
 import com.bridgebuildersanonymous.ropebridge.util.ModUtils;
@@ -15,8 +15,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class LadderBuildingHandler {
 
+	public static List<BlockState> slabsfrominv;
 
 	public static void newLadder(BlockPos start, PlayerEntity player, World world, Direction hitSide,
 								 ItemStack builder) {

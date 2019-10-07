@@ -1,45 +1,56 @@
 package com.bridgebuildersanonymous.ropebridge;
 
-import com.bridgebuildersanonymous.ropebridge.lib.Constants;
-import com.bridgebuildersanonymous.ropebridge.common.CommonProxy;
-import com.bridgebuildersanonymous.ropebridge.handler.ConfigurationHandler;
-import com.bridgebuildersanonymous.ropebridge.network.BridgeMessage;
-import com.bridgebuildersanonymous.ropebridge.network.LadderMessage;
-
+import com.bridgebuildersanonymous.ropebridge.util.handler.ConfigHandler;
+import com.bridgebuildersanonymous.ropebridge.util.network.RopeBridgePacketHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, version = Constants.VERSION_NUMBER)
+@Mod("ropebridge")
 public class RopeBridge {
-    private static SimpleNetworkWrapper snw;
 
-    private int discriminator = 0;
 
-    @Mod.Instance(Constants.MOD_ID)
-    private static RopeBridge instance;
 
-    @SidedProxy(clientSide = Constants.CLIENT_PROXY_CLASS, serverSide = Constants.SERVER_PROXY_CLASS)
-    private static CommonProxy proxy;
+    public static final String MOD_ID = "ropebridge";
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent e) {
-        ConfigurationHandler.initConfig(e.getSuggestedConfigurationFile());
-        proxy.preInit(e);
-        snw = NetworkRegistry.INSTANCE.newSimpleChannel(Constants.MOD_ID);
-        snw.registerMessage(BridgeMessage.BridgeMessageHandler.class, BridgeMessage.class, discriminator++, Side.SERVER);
-        snw.registerMessage(LadderMessage.LadderMessageHandler.class, LadderMessage.class, discriminator++, Side.SERVER);
+    public static RopeBridge instance;
+
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+
+
+    public RopeBridge() {
+        ModLoadingContext modLoadingContext = ModLoadingContext.get();
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+
+        MinecraftForge.EVENT_BUS.register(this);
+        modLoadingContext.registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
+
     }
 
-    public static SimpleNetworkWrapper getSnw() {
-        return snw;
+    private void setup(final FMLCommonSetupEvent event) {
+        RopeBridgePacketHandler.init();
     }
 
-    public static CommonProxy getProxy() {
-        return proxy;
+    private void doClientStuff(final FMLClientSetupEvent event) {
+
     }
+
+    private void enqueueIMC(final InterModEnqueueEvent event) {
+    }
+
+    private void processIMC(final InterModProcessEvent event) {
+    }
+
 }

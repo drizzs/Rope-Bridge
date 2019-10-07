@@ -10,7 +10,7 @@
  	 "F": { "item": "minecraft:flint_and_steel" },
   	"R": { "item": "ropebridge:rope" },
   	"G": { "item": "minecraft:gunpowder" },
-  	"W": { "item": "minecraft:planks", "data": 0 }
+  	"W": { "tags": "minecraft:planks"}
   },
   "result": {
     "item": "ropebridge:bridge_builder_material.handle",

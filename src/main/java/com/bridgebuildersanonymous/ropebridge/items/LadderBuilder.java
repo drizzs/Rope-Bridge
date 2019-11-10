@@ -1,6 +1,8 @@
 package com.bridgebuildersanonymous.ropebridge.items;
 
+import com.bridgebuildersanonymous.ropebridge.RopeBridge;
 import com.bridgebuildersanonymous.ropebridge.items.ItemBuilder;
+import com.bridgebuildersanonymous.ropebridge.util.handler.builders.LadderBuildingHandler;
 import com.bridgebuildersanonymous.ropebridge.util.network.RopeBridgePacketHandler;
 import com.bridgebuildersanonymous.ropebridge.util.lib.LadderMessage;
 
@@ -29,12 +31,15 @@ public class LadderBuilder extends ItemBuilder {
                 final BlockRayTraceResult hit = (BlockRayTraceResult) trace(player);
                 if (hit.getType() == Type.BLOCK) {
                     final BlockPos start = hit.getPos();
+                    RopeBridge.LOGGER.info(start);
                     BlockPos pos = player.getPosition();
                     Direction direction = player.getHorizontalFacing();
+                    RopeBridge.LOGGER.info(direction);
                     PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
                             pos.getX(), pos.getY(), pos.getZ(), 500, world.dimension.getType());
                     RopeBridgePacketHandler.INSTANCE.send(PacketDistributor.NEAR.with(() -> point),
                             new LadderMessage(start.offset(direction), direction));
+                    LadderBuildingHandler.newLadder(start.offset(direction), player, world, direction, stack);
 
                 }
             }

@@ -7,17 +7,22 @@ import com.bridgebuildersanonymous.ropebridge.util.handler.SlabPosHandler;
 import com.bridgebuildersanonymous.ropebridge.util.lib.ModLib;
 import com.bridgebuildersanonymous.ropebridge.util.ModUtils;
 
-import net.minecraft.block.Block;
+
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.properties.SlabType;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static net.minecraft.block.SlabBlock.TYPE;
+
 
 public class BridgeBuildingHandler {
 
@@ -68,7 +73,7 @@ public class BridgeBuildingHandler {
         if (distInt < 2) {
             return;
         }
-        if (!player.isCreative() && !hasMaterials(player, distInt - 1)) {
+        if (!hasMaterials(player, distInt - 1)) {
             return;
         }
         for (int x = Math.min(x1, x2) + 1; x <= Math.max(x1, x2) - 1; x++) {
@@ -78,9 +83,9 @@ public class BridgeBuildingHandler {
                     int level;
                     if (funcVal >= y) {
                         if (funcVal >= y + 0.25) {
-                            level = 4;
+                            level = 2;
                         } else {
-                            level = 3;
+                            level = 1;
                         }
                     } else {
                         if (funcVal >= y - 0.25) {
@@ -89,22 +94,22 @@ public class BridgeBuildingHandler {
                             level = 1;
                         }
                     }
-                    allClear = !addSlab(player.world, bridge, x, y + 1, z1, level, rotate) ? false : allClear;
+                    allClear = addSlab(player.world, bridge, x, y + 1, z1, level, rotate) && allClear;
                 }
             }
         }
 
         if (allClear) {
-            final int type = inputType == -1 ? getWoodType(player) : inputType;
-            if (inputType == -1 && !player.isCreative()) {
-                Hand hand = player.getActiveHand();
-                takeMaterials(player, distInt - 1);
-                stack.damageItem(ConfigHandler.COMMON.bridgeDamage.get(), player, (p) -> { p.sendBreakAnimation(hand);} );
+            Hand hand = player.getActiveHand();
+            takeMaterials(player, distInt - 1);
+            stack.damageItem(ConfigHandler.COMMON.bridgeDamage.get(), player, (p) -> {
+                p.sendBreakAnimation(hand);
+            });
+            if (slabsfrominv.size() > 0) {
+                buildBridge(player.world, bridge);
             }
-            buildBridge(player.world, bridge, type);
         } else {
             ModUtils.tellPlayer(player, ModLib.Messages.OBSTRUCTED);
-            return;
         }
     }
 
@@ -113,9 +118,6 @@ public class BridgeBuildingHandler {
     }
 
     private static boolean hasMaterials(PlayerEntity player, int dist) {
-        boolean noCost = ConfigHandler.COMMON.slabsPerBlock.get() == 0 && ConfigHandler.COMMON.stringPerBlock.get() == 0;
-        if (player.isCreative()|| noCost)
-            return true;
         final int slabsNeeded = dist;
         final int stringNeeded = 1 + dist / 2;
         int slabsHad = 0;
@@ -143,11 +145,6 @@ public class BridgeBuildingHandler {
     }
 
     private static void takeMaterials(PlayerEntity player, int dist) {
-        BridgeBuildingHandler handler = null;
-        boolean noCost = ConfigHandler.COMMON.slabsPerBlock.get() == 0 && ConfigHandler.COMMON.stringPerBlock.get() == 0;
-        if (player.isCreative() || noCost) {
-            return;
-        }
         int slabsNeeded = dist;
         int stringNeeded = 1 + dist / 2;
         int i = 0;
@@ -157,31 +154,40 @@ public class BridgeBuildingHandler {
             if (stack.isEmpty()) {
                 continue;
             }
-            final BlockItem item = (BlockItem) stack.getItem();
+            final Item item = stack.getItem();
             if (item == ModLib.itemRope) {
                 if (stack.getCount() > stringNeeded) {
-                	stack.shrink(stringNeeded);
+                    stack.shrink(stringNeeded);
                     stringNeeded = 0;
                 }
-            } else if (item.isIn(ItemTags.SLABS)) {
+                else if(hasMaterials(player, dist)){
+                    int x = stack.getCount();
+                    stack.shrink(x);
+                    stringNeeded = -x;
+                }
+            }
+            if (item.isIn(ItemTags.SLABS)) {
                 if (stack.getCount() > slabsNeeded) {
-                    setSlabsfrominv(stringNeeded, item.getBlock().getDefaultState());
-                    stack.shrink(stringNeeded);
+                    BlockItem itemblock = (BlockItem) item;
+                    setSlabsfrominv(slabsNeeded, itemblock.getBlock().getDefaultState());
+                    stack.shrink(slabsNeeded);
                     slabsNeeded = 0;
+                }
+                else if(hasMaterials(player, dist)){
+                    int x = stack.getCount();
+                    stack.shrink(x);
+                    slabsNeeded = -x;
                 }
             }
         }
     }
-
-
 
     private static boolean addSlab(World world, LinkedList<SlabPosHandler> list, int x, int y, int z, int level, boolean rotate) {
         boolean isClear;
         BlockPos pos;
         if (rotate) {
             pos = new BlockPos(z, y, x);
-        }
-        else {
+        } else {
             pos = new BlockPos(x, y, z);
         }
         isClear = ConfigHandler.COMMON.breakThroughBlocks.get() || world.isAirBlock(pos) || world.getBlockState(pos).canBeReplacedByLogs(world, pos);
@@ -189,7 +195,7 @@ public class BridgeBuildingHandler {
         if (!isClear) {
             spawnSmoke(world, pos, 15);
         }
-        return isClear;
+        return true;
     }
 
     // Controls if blocks are in the way
@@ -209,45 +215,46 @@ public class BridgeBuildingHandler {
         }
     }
 
-
-	private static void buildBridge(final World world, final LinkedList<SlabPosHandler> bridge, final int type) {
+    private static void buildBridge(final World world, final LinkedList<SlabPosHandler> bridge) {
         SlabPosHandler slab;
         if (!bridge.isEmpty()) {
             slab = bridge.pop();
-
-            world.setBlockState(slab.getBlockPos(), getSlabs(), 3);
-            spawnSmoke(world, new BlockPos(slab.getBlockPos().getX(), slab.getBlockPos().getY(), slab.getBlockPos().getZ()), 1);
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    buildBridge(world, bridge, type);
-                }
-            }, 100);
-        }
-    }
-
-    private static int getWoodType(PlayerEntity player) {
-        for (ItemStack stack : player.inventory.mainInventory) {
-            if (stack.isEmpty()) {
-                continue;
+            BlockState slabstate;
+            switch (slab.getLevel()) {
+                case 1:
+                    slabstate = slabsfrominv.get(1).getBlockState().with(TYPE, SlabType.BOTTOM);
+                    break;
+                case 2:
+                    slabstate = slabsfrominv.get(1).getBlockState().with(TYPE, SlabType.TOP);
+                    break;
+                default:
+                    slabstate = Blocks.AIR.getDefaultState();
+                    break;
             }
-            Item item = stack.getItem();
-            if (item.isIn(ItemTags.SLABS))
-                return stack.getDamage();
+
+
+            if (!world.getBlockState(slab.getBlockPos()).isSolid()) {
+                world.setBlockState(slab.getBlockPos(), slabstate, 3);
+                spawnSmoke(world, new BlockPos(slab.getBlockPos().getX(), slab.getBlockPos().getY(), slab.getBlockPos().getZ()), 1);
+                slabsfrominv.remove(1);
+                if(!slabsfrominv.isEmpty()) {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            buildBridge(world, bridge);
+                        }
+                    }, 100);
+                }
+            }
         }
-        return 0;
     }
 
-
-    public static void setSlabsfrominv(int i, BlockState state) {
+    public static List<BlockState> setSlabsfrominv(int i, BlockState state) {
         slabsfrominv = new ArrayList<>(i);
         for (int n = 0; n < i; n++) {
             slabsfrominv.add(state);
         }
-    }
-
-    public static BlockState getSlabs(){
-        return slabsfrominv.get(0);
+        return slabsfrominv;
     }
 
 }

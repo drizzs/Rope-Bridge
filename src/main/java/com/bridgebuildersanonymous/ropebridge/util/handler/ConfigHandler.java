@@ -36,7 +36,7 @@ public class ConfigHandler {
                     .defineInRange("bridgeDroopFactor", 100, 0, 100);
             bridgeYOffset = builder
                     .comment( "Generated bridges will be raised or lowered by this ammount in blocks.\nDefault is just below user's feet.")
-                    .defineInRange("bridgeYOffset", -0.3F, -1.00F, 1.00F);
+                    .defineInRange("bridgeYOffset", -0.1F, -1.00F, 1.00F);
             breakThroughBlocks = builder
                     .comment("If enabled, all blocks that dare stand in a bridge's way will be broken.\nVery useful in creative mode.")
                     .define("breakThroughBlocks", false);

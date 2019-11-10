@@ -6,7 +6,9 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.bridgebuildersanonymous.ropebridge.RopeBridge;
 import com.bridgebuildersanonymous.ropebridge.items.ItemBuilder;
+import com.bridgebuildersanonymous.ropebridge.util.handler.builders.BridgeBuildingHandler;
 import com.bridgebuildersanonymous.ropebridge.util.network.RopeBridgePacketHandler;
 import com.bridgebuildersanonymous.ropebridge.util.lib.ModLib;
 import com.bridgebuildersanonymous.ropebridge.util.ModUtils;
@@ -34,7 +36,7 @@ import javax.annotation.Nullable;
 
 public class BridgeBuilder extends ItemBuilder {
 
-	public BridgeBuilder(Properties properties) {
+    public BridgeBuilder(Properties properties) {
         super(properties);
     }
 
@@ -65,9 +67,11 @@ public class BridgeBuilder extends ItemBuilder {
         float yaw = player.rotationYaw % 360;
         if (yaw < 0) {
             yaw += 360;
-        } if (yaw < 45) {
+        }
+        if (yaw < 45) {
             return 0F;
-        } if (yaw > 45 && yaw <= 135) {
+        }
+        if (yaw > 45 && yaw <= 135) {
             return 90F;
         } else if (yaw > 135 && yaw <= 225) {
             return 180F;
@@ -90,11 +94,12 @@ public class BridgeBuilder extends ItemBuilder {
                     if (hit.getType() == Type.BLOCK) {
                         final BlockPos floored = new BlockPos(Math.floor(player.posX), Math.floor(player.posY) - 1, Math.floor(player.posZ)).down();
                         BlockPos target = hit.getPos();
-                        BlockPos pos = player.getPosition();
                         PacketDistributor.TargetPoint point = new PacketDistributor.TargetPoint(
-                                pos.getX(), pos.getY(), pos.getZ(), 500, world.dimension.getType());
+                                floored.getX(), floored.getY(), floored.getZ(), 500, world.dimension.getType());
+                        RopeBridge.LOGGER.info(hit + "areaPoint");
                         RopeBridgePacketHandler.INSTANCE.send((PacketDistributor.NEAR.with(() -> point)),
                                 new BridgeMessage(floored, target));
+                        BridgeBuildingHandler.newBridge(player, player.getHeldItemMainhand(), -1, target, floored);
                     }
                 }
             }
@@ -116,7 +121,7 @@ public class BridgeBuilder extends ItemBuilder {
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         World world = Minecraft.getInstance().world;
         PlayerEntity player = Minecraft.getInstance().player;
-	    if (!world.isRemote) {
+        if (!world.isRemote) {
             if (player.isSneaking() && isBridgeBlock(state.getBlock())) {
                 return 0.3F;
             }
@@ -132,19 +137,19 @@ public class BridgeBuilder extends ItemBuilder {
     }
 
     private static boolean isBridgeBlock(Block blockIn) {
-        return blockIn.isIn(BlockTags.SLABS); }
+        return blockIn.isIn(BlockTags.SLABS);
+    }
 
     /**
      * Breaks block at position posIn and recursively spreads to in-line
      * neighbors
      *
-     * @param posIn
-     *            the position of the block to start breaking bridge from
+     * @param posIn the position of the block to start breaking bridge from
      */
     private static void breakBridge(final PlayerEntity player, final World worldIn, final BlockPos posIn) {
-            Minecraft.getInstance().deferTask(() -> {
-                int xRange = 0;
-                int zRange = 0;
+        Minecraft.getInstance().deferTask(() -> {
+            int xRange = 0;
+            int zRange = 0;
 
             Queue<BlockPos> newQueue = new LinkedList<>();
             newQueue.add(posIn);

@@ -1,10 +1,6 @@
 package com.bridgebuildersanonymous.ropebridge.util.lib;
 
-
-import com.bridgebuildersanonymous.ropebridge.util.handler.LadderBuildingHandler;
-
-
-
+import com.bridgebuildersanonymous.ropebridge.util.handler.builders.LadderBuildingHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
